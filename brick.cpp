@@ -104,10 +104,20 @@ void Brick::rotate(const Field &field) {
 	memcpy(oldBrick, m_brick, sizeof(Image) * BRICK_SZ * BRICK_SZ);
 	//continue here
 	loadBrick(m_type, (Brick::Rot)((m_rot + 1) % BR_MAX));
-	if (checkCollision(field, m_x, m_y)) {
+	bool rotated = false;
+	for (int x = m_x;
+			x > m_x - 3 && x < m_x + 3;
+			x = (x >= m_x) ? (2 * m_x - (x + 1)) : (2 * m_x - x)) {
+		if (!checkCollision(field, x, m_y)) {
+			m_rot = (Brick::Rot) ((m_rot + 1) % BR_MAX);
+			m_x = x;
+			rotated = true;
+			break;
+		}
+	}
+
+	if (!rotated) {
 		memcpy(m_brick, oldBrick, sizeof(Image) * BRICK_SZ * BRICK_SZ);
-	} else {
-		m_rot = (Brick::Rot)((m_rot + 1) % BR_MAX);
 	}
 }
 
