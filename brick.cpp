@@ -210,9 +210,10 @@ void Brick::draw(SDL_Surface *scrn) {
 				dst.y = (m_y + by) * SQUARE_SZ + FIELD_OFFSET_Y;
 				SDL_BlitSurface(m_brick[bx + BRICK_SZ * by].getSurf(), NULL, scrn, &dst);
 
+			}
+			if (m_nextBrick[bx + BRICK_SZ * by].getSurf()) {
 				nextDst.x = bx * SQUARE_SZ + NEXT_BRICK_X;
 				nextDst.y = by * SQUARE_SZ + NEXT_BRICK_Y;
-
 				SDL_BlitSurface(m_nextBrick[bx + BRICK_SZ * by].getSurf(), NULL, scrn, &nextDst);
 			}
 		}
