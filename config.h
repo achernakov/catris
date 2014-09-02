@@ -6,3 +6,5 @@
 #define FIELD_H 20
 #define FIELD_W 10
 #define BRICK_SZ 4
+#define NEXT_BRICK_X 520
+#define NEXT_BRICK_Y 240

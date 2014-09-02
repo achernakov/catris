@@ -9,4 +9,4 @@ add_executable (catris
 	brick.cpp
 	field.cpp
 	helpers.cpp)
-target_link_libraries (catris SDL SDL_image pthread)
+target_link_libraries (catris SDL SDL_image SDL_gfx pthread)

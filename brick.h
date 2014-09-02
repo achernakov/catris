@@ -32,6 +32,8 @@ public:
 
 	void loadBrick (Type brType, Rot brRot);
 
+	void loadNextBrick (Type brType, Rot brRot);
+
 	void draw (SDL_Surface * scrn);
 
 
@@ -40,6 +42,7 @@ private:
 
 	Type m_type;
 	Image m_brick [BRICK_SZ * BRICK_SZ];
+	Image m_nextBrick [BRICK_SZ * BRICK_SZ];
 	int m_x;
 	int m_y;
 	Rot m_rot;

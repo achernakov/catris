@@ -16,6 +16,7 @@ public:
 
 	void clipBrick (int x, int y, Image * image);
 	void swipeLines ();
+	bool checkTopLine ();
 protected:
 private:
 	Image * m_field[FIELD_H * FIELD_W];

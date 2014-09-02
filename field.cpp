@@ -35,24 +35,38 @@ void Field::clipBrick(int x, int y, Image *image) {
 }
 
 void Field::swipeLines() {
-	for (int y = 0; y < FIELD_H; y++) {
-		bool fullLine = true;
-		for (int x = 0; x < FIELD_W; x++) {
-			if (!m_field[x + y * FIELD_W]) {
-				fullLine = false;
-				break;
-			}
-		}
-		if (fullLine) {
-			for (int line = y; line > 0; line--) {
-				for (int x = 0; x < FIELD_W; x++) {
-					m_field[x + line * FIELD_W] = m_field[x + (line - 1) * FIELD_W];
+	bool removed = true;
+	while (removed) {
+		removed = false;
+		for (int y = FIELD_H - 1; y >= 0; y--) {
+			bool fullLine = true;
+			for (int x = 0; x < FIELD_W; x++) {
+				if (!m_field[x + y * FIELD_W]) {
+					fullLine = false;
+					break;
 				}
 			}
-			for (int x = 0; x < FIELD_W; x++) {
-				m_field[x]=NULL;
-			}
+			if (fullLine) {
+				removed = true;
+				for (int line = y; line > 0; line--) {
+					for (int x = 0; x < FIELD_W; x++) {
+						m_field[x + line * FIELD_W] = m_field[x + (line - 1) * FIELD_W];
+					}
+				}
+				for (int x = 0; x < FIELD_W; x++) {
+					m_field[x] = NULL;
+				}
 
+			}
 		}
 	}
+}
+
+bool Field::checkTopLine() {
+	for (int x = 0; x < FIELD_W; x++) {
+		if (m_field[x]) {
+			return false;
+		}
+	}
+	return true;
 }
