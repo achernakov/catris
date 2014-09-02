@@ -15,6 +15,7 @@ public:
 	bool isEmpty (int x, int y) const;
 
 	void clipBrick (int x, int y, Image * image);
+	void swipeLines ();
 protected:
 private:
 	Image * m_field[FIELD_H * FIELD_W];

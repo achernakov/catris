@@ -94,6 +94,7 @@ void Brick::fall(Field &field) {
 		m_y++;
 	} else {
 		clipBrick(field);
+		field.swipeLines();
 		spawnBrick(field);
 	}
 }
@@ -143,9 +144,9 @@ void Brick::spawnBrick(const Field &field) {
 
 	bool placeFound = false;
 	int xpos;
-	for (xpos = FIELD_W / 2;
+	for (xpos = FIELD_W / 2 - 2;
 		 	xpos >= 0 && xpos < FIELD_W;
-			xpos = (xpos >= FIELD_W) ? (2 * FIELD_W - (xpos + 1)) : (2 * FIELD_W - xpos)) {
+			xpos = (xpos >= FIELD_W / 2 - 2) ? (FIELD_W - 4 - (xpos + 1)) : (FIELD_W - 4 - xpos)) {
 		if (!checkCollision(field, xpos, -(firstLine))) {
 			placeFound = true;
 			break;
