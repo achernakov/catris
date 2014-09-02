@@ -27,13 +27,13 @@ void sulock() {
 
 void loadResources () {
 	Background.loadBmp("bg.bmp");
-	LoadBrickImage(Brick::BT_LINE, "simple.bmp");
+	LoadBrickImage(Brick::BT_LINE, "line.bmp");
 	LoadBrickImage(Brick::BT_CUBE, "simple.bmp");
 	LoadBrickImage(Brick::BT_LGAMMA, "simple.bmp");
 	LoadBrickImage(Brick::BT_RGAMMA, "simple.bmp");
 	LoadBrickImage(Brick::BT_SNL, "sl.bmp");
-	LoadBrickImage(Brick::BT_SNR, "simple.bmp");
-	LoadBrickImage(Brick::BT_T, "simple.bmp");
+	LoadBrickImage(Brick::BT_SNR, "sr.bmp");
+	LoadBrickImage(Brick::BT_T, "t.bmp");
 	FallingBrick.spawnBrick(GameField);
 }
 
