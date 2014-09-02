@@ -10,9 +10,13 @@ public:
 
 	void draw(SDL_Surface *scrn);
 
+	void draw(SDL_Surface *scrn, int x, int y);
+
 	size_t getWidth();
 
 	size_t getHeight();
+
+	SDL_Surface * setSurf (SDL_Surface * surf);
 
 	Image();
 

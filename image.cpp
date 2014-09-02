@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "image.h"
+#include "config.h"
+
 
 Image::Image() : m_surf(NULL) {
 }
@@ -19,7 +21,19 @@ SDL_Surface *Image::getSurf() {
 }
 
 void Image::draw(SDL_Surface *scrn) {
-	SDL_BlitSurface(m_surf, NULL, scrn, NULL);
+	if (m_surf) {
+		SDL_BlitSurface(m_surf, NULL, scrn, NULL);
+	}
+}
+
+void Image::draw(SDL_Surface *scrn, int x, int y) {
+	if (m_surf) {
+		SDL_Rect dstRect;
+		dstRect.h = dstRect.w = SQUARE_SZ;
+		dstRect.x = x;
+		dstRect.y = y;
+		SDL_BlitSurface(m_surf, NULL, scrn, &dstRect);
+	}
 }
 
 size_t Image::getHeight() {
@@ -28,4 +42,8 @@ size_t Image::getHeight() {
 
 size_t Image::getWidth() {
 	return (size_t) m_surf->w;
+}
+
+SDL_Surface * Image::setSurf(SDL_Surface *surf) {
+	return m_surf = surf;
 }

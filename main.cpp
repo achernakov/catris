@@ -1,8 +1,14 @@
 #include "stdafx.h"
 #include "image.h"
+#include "field.h"
+#include "brick.h"
 
 static SDL_Surface *Screen;
 static Image Background;
+static Field GameField;
+static Brick FallingBrick;
+static SDL_Event EventFall;
+static SDL_TimerID TimerFall;
 
 //lock and unlock surface on drawing
 void slock() {
@@ -19,34 +25,75 @@ void sulock() {
 	}
 }
 
+void loadResources () {
+	Background.loadBmp("bg.bmp");
+	LoadBrickImage(Brick::BT_LINE, "simple.bmp");
+	LoadBrickImage(Brick::BT_CUBE, "simple.bmp");
+	LoadBrickImage(Brick::BT_LGAMMA, "simple.bmp");
+	LoadBrickImage(Brick::BT_RGAMMA, "simple.bmp");
+	LoadBrickImage(Brick::BT_SNL, "sl.bmp");
+	LoadBrickImage(Brick::BT_SNR, "simple.bmp");
+	LoadBrickImage(Brick::BT_T, "simple.bmp");
+	FallingBrick.spawnBrick(GameField);
+}
+
+Uint32 SDLCALL FallCallback (Uint32 interval, void *param) {
+	EventFall.type = SDL_USEREVENT;
+	SDL_PushEvent(&EventFall);
+}
+
 int main(int argc, char **argv) {
 	bool quitState = false;
 
-	Background.loadBmp("bg.bmp");
 
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+	srand(time(NULL));
+
+	loadResources();
 	Screen = SDL_SetVideoMode(Background.getWidth(), Background.getHeight(), 24, SDL_HWSURFACE | SDL_DOUBLEBUF);
-
+	TimerFall = SDL_AddTimer(500, FallCallback, NULL);
 
 	SDL_Event ev;
 
-	while (!quitState) {
+	while (!quitState && SDL_WaitEvent(&ev)) {
 		slock();
+
 		//Draw here
 		Background.draw(Screen);
+		GameField.draw(Screen);
+		FallingBrick.draw(Screen);
+
 		SDL_Flip(Screen);
 		sulock();
 
-		while (SDL_PollEvent(&ev)) {
-			switch (ev.type) {
-				case SDL_KEYDOWN:
-					switch (ev.key.keysym.sym) {
-						case SDLK_ESCAPE:
-							quitState = true;
-							break;
-					}
-					break;
-			}
+
+		switch (ev.type) {
+			case SDL_KEYDOWN:
+				switch (ev.key.keysym.sym) {
+					case SDLK_ESCAPE:
+						quitState = true;
+						break;
+					case SDLK_r:
+						FallingBrick.rotate(GameField);
+						break;
+					case SDLK_RIGHT:
+						FallingBrick.moveRight(GameField);
+						break;
+					case SDLK_LEFT:
+						FallingBrick.moveLeft(GameField);
+						break;
+					case SDLK_DOWN:
+						FallingBrick.fall(GameField);
+						break;
+				}
+				break;
+			case SDL_QUIT:
+				quitState = true;
+				break;
+			case SDL_USEREVENT:
+				FallingBrick.fall(GameField);
+				TimerFall = SDL_AddTimer(500, FallCallback, NULL);
+				break;
 		}
 	}
 
