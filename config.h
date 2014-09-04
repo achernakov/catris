@@ -4,8 +4,8 @@
 #define SQUARE_SZ 48
 
 //Position of the top left corner of the game field
-#define FIELD_OFFSET_X 32
-#define FIELD_OFFSET_Y 32
+#define FIELD_OFFSET_X 0
+#define FIELD_OFFSET_Y 0
 
 //Size of field, in squares
 #define FIELD_H 20
