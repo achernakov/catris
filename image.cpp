@@ -10,7 +10,9 @@ Image::~Image() {
 }
 
 void Image::loadBmp(const std::string &path) {
-	m_surf = SDL_LoadBMP (path.c_str());
+	//m_surf = SDL_LoadBMP (path.c_str());
+
+	m_surf = IMG_Load(path.c_str());
 	if (!m_surf) {
 		throw std::runtime_error("Can't load texture");
 	}

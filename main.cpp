@@ -27,13 +27,13 @@ void sulock() {
 
 void loadResources () {
 	Background.loadBmp("bg.bmp");
-	LoadBrickImage(Brick::BT_LINE, "line.bmp");
-	LoadBrickImage(Brick::BT_CUBE, "simple.bmp");
-	LoadBrickImage(Brick::BT_LGAMMA, "simple.bmp");
-	LoadBrickImage(Brick::BT_RGAMMA, "simple.bmp");
-	LoadBrickImage(Brick::BT_SNL, "sl.bmp");
-	LoadBrickImage(Brick::BT_SNR, "sr.bmp");
-	LoadBrickImage(Brick::BT_T, "t.bmp");
+	LoadBrickImage(Brick::BT_LINE, "simple.png");
+	LoadBrickImage(Brick::BT_CUBE, "simple.png");
+	LoadBrickImage(Brick::BT_LGAMMA, "simple.png");
+	LoadBrickImage(Brick::BT_RGAMMA, "simple.png");
+	LoadBrickImage(Brick::BT_SNL, "simple.png");
+	LoadBrickImage(Brick::BT_SNR, "simple.png");
+	LoadBrickImage(Brick::BT_T, "simple.png");
 	FallingBrick.spawnBrick(GameField);
 }
 
@@ -47,6 +47,9 @@ int main(int argc, char **argv) {
 
 
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+		throw std::runtime_error("Can't init PNG loading");
+	}
 	srand(time(NULL));
 
 	loadResources();
