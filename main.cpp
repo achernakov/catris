@@ -27,7 +27,7 @@ void sulock() {
 
 void loadResources () {
 	Background.loadBmp("bg.bmp");
-	LoadBrickImage(Brick::BT_LINE, "simple.png");
+	LoadBrickImage(Brick::BT_LINE, "art/line.png");
 	LoadBrickImage(Brick::BT_CUBE, "simple.png");
 	LoadBrickImage(Brick::BT_LGAMMA, "simple.png");
 	LoadBrickImage(Brick::BT_RGAMMA, "simple.png");
