@@ -5,6 +5,10 @@ SDL_Surface *CreateSurf(int width, int height) {
 
 	SDL_Surface *surface;
 	Uint32 rmask, gmask, bmask, amask;
+	SDL_Rect rct;
+	rct.x = rct.y = 0;
+	rct.h = height;
+	rct.w = width;
 
 /* SDL interprets each pixel as a 32-bit number, so our masks must depend
    on the endianness (byte order) of the machine */
@@ -20,14 +24,24 @@ SDL_Surface *CreateSurf(int width, int height) {
 	amask = 0xff000000;
 #endif
 
-	surface = SDL_CreateRGBSurface(0, width, height, 32,
+	surface = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 32,
 			rmask, gmask, bmask, amask);
 	if (surface == NULL) {
-		fprintf(stderr, "CreateRGBSurface failed: %s\n", SDL_GetError());
-		exit(1);
+		throw std::runtime_error("Surface creation just fucked up");
 	}
 
-/* or using the default masks for the depth: */
-	surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+	//SDL_FillRect(surface, &rct, SDL_MapRGBA(surface->format, 0, 0, 0, 255));
+	FormatAlpha(surface);
+
+
 	return surface;
+}
+
+void FormatAlpha (SDL_Surface * & surf) {
+	SDL_Surface * tmp = SDL_DisplayFormatAlpha(surf);
+	if (!tmp) {
+		throw std::runtime_error("Can't set alpha format");
+	}
+	SDL_FreeSurface(surf);
+	surf = tmp;
 }

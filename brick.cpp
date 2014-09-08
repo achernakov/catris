@@ -55,19 +55,21 @@ Brick::~Brick() {
 
 Brick::Type Brick::randType() {
 	int r = rand();
+	return Brick::BT_LINE;
 	return (Brick::Type) (r % BT_MAX);
 }
 
 Brick::Rot Brick::randRot() {
 	int r = rand();
 	//r = BR_UP;
+	return Brick::BR_UP;
 	return (Brick::Rot) (r % BR_MAX);
 }
 
 bool Brick::checkCollision(const Field &field, int x, int y) {
 	for (int bx = 0; bx < BRICK_SZ; bx++) {
 		for (int by = 0; by < BRICK_SZ; by++) {
-			if (m_brick[bx + BRICK_SZ * by].getSurf()) {
+			if (m_brick[bx + BRICK_SZ * by]) {
 				if (	(bx + x < 0) || (bx + x >= FIELD_W) ||
 						(by + y < 0) || (by + y >= FIELD_H) ||
 						!field.isEmpty(x + bx, y + by)) {
@@ -132,7 +134,7 @@ void Brick::rotate(const Field &field) {
 void Brick::clipBrick(Field &field) {
 	for (int bx = 0; bx < BRICK_SZ; bx++) {
 		for (int by = 0; by < BRICK_SZ; by++) {
-			if (m_brick[bx + by * BRICK_SZ].getSurf()) {
+			if (m_brick[bx + by * BRICK_SZ]) {
 				field.clipBrick(m_x + bx, m_y + by, &g_textures[m_type][m_rot][bx + by * BRICK_SZ]);
 			}
 		}
@@ -151,7 +153,7 @@ void Brick::spawnBrick(const Field &field) {
 	int firstLine = -1;
 	for (int by = 0; by < BRICK_SZ; by++) {
 		for (int bx = 0; bx < BRICK_SZ; bx++) {
-			if (m_brick[bx + by * BRICK_SZ].getSurf()) {
+			if (m_brick[bx + by * BRICK_SZ]) {
 				firstLine = by;
 				break;
 			}
@@ -184,7 +186,7 @@ void Brick::spawnBrick(const Field &field) {
 void Brick::loadBrick(Type brType, Rot brRot) {
 	for (int bx = 0; bx < BRICK_SZ; bx++) {
 		for (int by = 0; by < BRICK_SZ; by++) {
-			m_brick[bx + BRICK_SZ * by].setSurf(g_textures[brType][brRot][bx + BRICK_SZ * by].getSurf());
+			m_brick[bx + BRICK_SZ * by] = g_textures[brType][brRot][bx + BRICK_SZ * by];
 		}
 	}
 }
@@ -192,7 +194,7 @@ void Brick::loadBrick(Type brType, Rot brRot) {
 void Brick::loadNextBrick(Type brType, Rot brRot) {
 	for (int bx = 0; bx < BRICK_SZ; bx++) {
 		for (int by = 0; by < BRICK_SZ; by++) {
-			m_nextBrick[bx + BRICK_SZ * by].setSurf(g_textures[brType][brRot][bx + BRICK_SZ * by].getSurf());
+			m_nextBrick[bx + BRICK_SZ * by] = g_textures[brType][brRot][bx + BRICK_SZ * by];
 		}
 	}
 }
@@ -205,16 +207,16 @@ void Brick::draw(SDL_Surface *scrn) {
 
 	for (int bx = 0; bx < BRICK_SZ; bx++) {
 		for (int by = 0; by < BRICK_SZ; by++) {
-			if (m_brick[bx + BRICK_SZ * by].getSurf()) {
+			if (m_brick[bx + BRICK_SZ * by]) {
 				dst.x = (m_x + bx) * SQUARE_SZ + FIELD_OFFSET_X;
 				dst.y = (m_y + by) * SQUARE_SZ + FIELD_OFFSET_Y;
-				SDL_BlitSurface(m_brick[bx + BRICK_SZ * by].getSurf(), NULL, scrn, &dst);
+				SDL_BlitSurface(m_brick[bx + BRICK_SZ * by], NULL, scrn, &dst);
 
 			}
-			if (m_nextBrick[bx + BRICK_SZ * by].getSurf()) {
+			if (m_nextBrick[bx + BRICK_SZ * by]) {
 				nextDst.x = bx * SQUARE_SZ + NEXT_BRICK_X;
 				nextDst.y = by * SQUARE_SZ + NEXT_BRICK_Y;
-				SDL_BlitSurface(m_nextBrick[bx + BRICK_SZ * by].getSurf(), NULL, scrn, &nextDst);
+				SDL_BlitSurface(m_nextBrick[bx + BRICK_SZ * by], NULL, scrn, &nextDst);
 			}
 		}
 	}
@@ -233,10 +235,12 @@ bool LoadBrickImage(Brick::Type brType, const std::string &file) {
 			if (g_brickShapes[brType][bx + by * BRICK_SZ]) {
 				src.x = bx * SQUARE_SZ;
 				src.y = by * SQUARE_SZ;
-				g_textures[brType][Brick::BR_UP][bx + by * BRICK_SZ].setSurf(CreateSurf(SQUARE_SZ, SQUARE_SZ));
-				SDL_BlitSurface(brImage.getSurf(), &src, (g_textures[brType][Brick::BR_UP][bx + by * BRICK_SZ]).getSurf(), NULL);
+
+				g_textures[brType][Brick::BR_UP][bx + by * BRICK_SZ] = CreateSurf(SQUARE_SZ, SQUARE_SZ);
+				SDL_BlitSurface(brImage, &src, g_textures[brType][Brick::BR_UP][bx + by * BRICK_SZ], NULL);
+
 			} else {
-				g_textures[brType][Brick::BR_UP][bx + by * BRICK_SZ].setSurf(NULL);
+				g_textures[brType][Brick::BR_UP][bx + by * BRICK_SZ] = NULL;
 			}
 		}
 	}
@@ -251,15 +255,15 @@ bool LoadBrickImage(Brick::Type brType, const std::string &file) {
 			if (g_brickShapes[brType][bx + by * BRICK_SZ]) {
 				src.x = bx * SQUARE_SZ;
 				src.y = by * SQUARE_SZ;
-				g_textures[brType][Brick::BR_RIGHT][tx + ty * BRICK_SZ].setSurf(CreateSurf(SQUARE_SZ, SQUARE_SZ));
-				SDL_BlitSurface(brImage.getSurf(), &src, (g_textures[brType][Brick::BR_RIGHT][tx + ty * BRICK_SZ]).getSurf(), NULL);
-				SDL_Surface * tmp = rotateSurface90Degrees(g_textures[brType][Brick::BR_RIGHT][tx + ty * BRICK_SZ].getSurf(), 1);
+				g_textures[brType][Brick::BR_RIGHT][tx + ty * BRICK_SZ] = CreateSurf(SQUARE_SZ, SQUARE_SZ);
+				SDL_BlitSurface(brImage, &src, g_textures[brType][Brick::BR_RIGHT][tx + ty * BRICK_SZ], NULL);
+				SDL_Surface * tmp = rotateSurface90Degrees(g_textures[brType][Brick::BR_RIGHT][tx + ty * BRICK_SZ], 1);
 				if (tmp) {
-					SDL_FreeSurface(g_textures[brType][Brick::BR_RIGHT][tx + ty * BRICK_SZ].getSurf());
-					g_textures[brType][Brick::BR_RIGHT][tx + ty * BRICK_SZ].setSurf(tmp);
+					SDL_FreeSurface(g_textures[brType][Brick::BR_RIGHT][tx + ty * BRICK_SZ]);
+					g_textures[brType][Brick::BR_RIGHT][tx + ty * BRICK_SZ] = tmp;
 				}
 			} else {
-				g_textures[brType][Brick::BR_RIGHT][tx + ty * BRICK_SZ].setSurf(NULL);
+				g_textures[brType][Brick::BR_RIGHT][tx + ty * BRICK_SZ] = NULL;
 			}
 		}
 	}
@@ -275,15 +279,15 @@ bool LoadBrickImage(Brick::Type brType, const std::string &file) {
 			if (g_brickShapes[brType][bx + by * BRICK_SZ]) {
 				src.x = bx * SQUARE_SZ;
 				src.y = by * SQUARE_SZ;
-				g_textures[brType][Brick::BR_DOWN][tx + ty * BRICK_SZ].setSurf(CreateSurf(SQUARE_SZ, SQUARE_SZ));
-				SDL_BlitSurface(brImage.getSurf(), &src, (g_textures[brType][Brick::BR_DOWN][tx + ty * BRICK_SZ]).getSurf(), NULL);
-				SDL_Surface * tmp = rotateSurface90Degrees(g_textures[brType][Brick::BR_DOWN][tx + ty * BRICK_SZ].getSurf(), 2);
+				g_textures[brType][Brick::BR_DOWN][tx + ty * BRICK_SZ] = CreateSurf(SQUARE_SZ, SQUARE_SZ);
+				SDL_BlitSurface(brImage, &src, g_textures[brType][Brick::BR_DOWN][tx + ty * BRICK_SZ], NULL);
+				SDL_Surface * tmp = rotateSurface90Degrees(g_textures[brType][Brick::BR_DOWN][tx + ty * BRICK_SZ], 2);
 				if (tmp) {
-					SDL_FreeSurface(g_textures[brType][Brick::BR_DOWN][tx + ty * BRICK_SZ].getSurf());
-					g_textures[brType][Brick::BR_DOWN][tx + ty * BRICK_SZ].setSurf(tmp);
+					SDL_FreeSurface(g_textures[brType][Brick::BR_DOWN][tx + ty * BRICK_SZ]);
+					g_textures[brType][Brick::BR_DOWN][tx + ty * BRICK_SZ] = tmp;
 				}
 			} else {
-				g_textures[brType][Brick::BR_DOWN][tx + ty * BRICK_SZ].setSurf(NULL);
+				g_textures[brType][Brick::BR_DOWN][tx + ty * BRICK_SZ] = NULL;
 			}
 		}
 	}
@@ -298,15 +302,15 @@ bool LoadBrickImage(Brick::Type brType, const std::string &file) {
 			if (g_brickShapes[brType][bx + by * BRICK_SZ]) {
 				src.x = bx * SQUARE_SZ;
 				src.y = by * SQUARE_SZ;
-				g_textures[brType][Brick::BR_LEFT][tx + ty * BRICK_SZ].setSurf(CreateSurf(SQUARE_SZ, SQUARE_SZ));
-				SDL_BlitSurface(brImage.getSurf(), &src, (g_textures[brType][Brick::BR_LEFT][tx + ty * BRICK_SZ]).getSurf(), NULL);
-				SDL_Surface * tmp = rotateSurface90Degrees(g_textures[brType][Brick::BR_LEFT][tx + ty * BRICK_SZ].getSurf(), 3);
+				g_textures[brType][Brick::BR_LEFT][tx + ty * BRICK_SZ] = CreateSurf(SQUARE_SZ, SQUARE_SZ);
+				SDL_BlitSurface(brImage, &src, g_textures[brType][Brick::BR_LEFT][tx + ty * BRICK_SZ], NULL);
+				SDL_Surface * tmp = rotateSurface90Degrees(g_textures[brType][Brick::BR_LEFT][tx + ty * BRICK_SZ], 3);
 				if (tmp) {
-					SDL_FreeSurface(g_textures[brType][Brick::BR_LEFT][tx + ty * BRICK_SZ].getSurf());
-					g_textures[brType][Brick::BR_LEFT][tx + ty * BRICK_SZ].setSurf(tmp);
+					SDL_FreeSurface(g_textures[brType][Brick::BR_LEFT][tx + ty * BRICK_SZ]);
+					g_textures[brType][Brick::BR_LEFT][tx + ty * BRICK_SZ] = tmp;
 				}
 			} else {
-				g_textures[brType][Brick::BR_LEFT][tx + ty * BRICK_SZ].setSurf(NULL);
+				g_textures[brType][Brick::BR_LEFT][tx + ty * BRICK_SZ] = NULL;
 			}
 		}
 	}

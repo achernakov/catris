@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "image.h"
+#include "helpers.h"
 #include "config.h"
 
 
@@ -9,6 +10,14 @@ Image::Image() : m_surf(NULL) {
 Image::~Image() {
 }
 
+Image & Image::operator=(const Image &surf) {
+	m_surf = surf.m_surf;
+}
+
+Image & Image::operator=(SDL_Surface *surf) {
+	m_surf = surf;
+}
+
 void Image::loadBmp(const std::string &path) {
 	//m_surf = SDL_LoadBMP (path.c_str());
 
@@ -16,6 +25,8 @@ void Image::loadBmp(const std::string &path) {
 	if (!m_surf) {
 		throw std::runtime_error("Can't load texture");
 	}
+
+	adoptAlpha();
 }
 
 SDL_Surface *Image::getSurf() {
@@ -48,4 +59,13 @@ size_t Image::getWidth() {
 
 SDL_Surface * Image::setSurf(SDL_Surface *surf) {
 	return m_surf = surf;
+}
+
+Image::operator SDL_Surface * () {
+	return m_surf;
+}
+
+void Image::adoptAlpha() {
+	FormatAlpha(m_surf);
+	SDL_SetAlpha(m_surf, 0, SDL_ALPHA_OPAQUE);
 }

@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "image.h"
+#include "helpers.h"
 #include "field.h"
 #include "brick.h"
 
 static SDL_Surface *Screen;
+//static Image Test;
+//static Image TestEmpty;
 static Image Background;
 static Field GameField;
 static Brick FallingBrick;
@@ -28,6 +31,7 @@ void sulock() {
 void loadResources () {
 	Background.loadBmp("bg.bmp");
 	LoadBrickImage(Brick::BT_LINE, "art/line.png");
+//	Test.loadBmp("art/line.png");
 	LoadBrickImage(Brick::BT_CUBE, "simple.png");
 	LoadBrickImage(Brick::BT_LGAMMA, "simple.png");
 	LoadBrickImage(Brick::BT_RGAMMA, "simple.png");
@@ -52,9 +56,11 @@ int main(int argc, char **argv) {
 	}
 	srand(time(NULL));
 
+	Screen = SDL_SetVideoMode(FIELD_IMG_W, FIELD_IMG_H, 32, SDL_SWSURFACE);
 	loadResources();
-	Screen = SDL_SetVideoMode(Background.getWidth(), Background.getHeight(), 24, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	TimerFall = SDL_AddTimer(500, FallCallback, NULL);
+
+//	TestEmpty = CreateSurf(48, 48);
 
 	SDL_Event ev;
 
@@ -63,6 +69,8 @@ int main(int argc, char **argv) {
 
 		//Draw here
 		Background.draw(Screen);
+//		Test.draw(Screen);
+//		TestEmpty.draw(Screen);
 		GameField.draw(Screen);
 		FallingBrick.draw(Screen);
 

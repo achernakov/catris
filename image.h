@@ -16,9 +16,19 @@ public:
 
 	size_t getHeight();
 
+	void adoptAlpha ();
+
 	SDL_Surface * setSurf (SDL_Surface * surf);
 
+	operator SDL_Surface * ();
+
+	Image & operator = (SDL_Surface * surf);
+
+	Image & operator = (const Image & surf);
+
 	Image();
+
+	Image (SDL_Surface * surf);
 
 	virtual ~Image();
 };

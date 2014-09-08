@@ -17,3 +17,7 @@
 //Position of the field, where the next block is displayed
 #define NEXT_BRICK_X 520
 #define NEXT_BRICK_Y 240
+
+//Field image size
+#define FIELD_IMG_W 769
+#define FIELD_IMG_H 953
