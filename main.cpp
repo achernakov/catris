@@ -30,11 +30,11 @@ void loadResources () {
 	Background.loadBmp("art/back.png");
 	LoadBrickImage(Brick::BT_LINE, "art/line.png");
 	LoadBrickImage(Brick::BT_CUBE, "art/sq.png");
-	LoadBrickImage(Brick::BT_LGAMMA, "simple.png");
-	LoadBrickImage(Brick::BT_RGAMMA, "simple.png");
+	LoadBrickImage(Brick::BT_LGAMMA, "art/G-right.png");
+	LoadBrickImage(Brick::BT_RGAMMA, "art/G-left.png");
 	LoadBrickImage(Brick::BT_SNL, "art/E.png");
 	LoadBrickImage(Brick::BT_SNR, "art/L.png");
-	LoadBrickImage(Brick::BT_T, "art/_i_.png");
+	LoadBrickImage(Brick::BT_T, "art/i.png");
 	FallingBrick.spawnBrick(GameField);
 }
 
