@@ -5,8 +5,6 @@
 #include "brick.h"
 
 static SDL_Surface *Screen;
-//static Image Test;
-//static Image TestEmpty;
 static Image Background;
 static Field GameField;
 static Brick FallingBrick;
@@ -29,15 +27,14 @@ void sulock() {
 }
 
 void loadResources () {
-	Background.loadBmp("bg.bmp");
+	Background.loadBmp("art/back.png");
 	LoadBrickImage(Brick::BT_LINE, "art/line.png");
-//	Test.loadBmp("art/line.png");
-	LoadBrickImage(Brick::BT_CUBE, "simple.png");
+	LoadBrickImage(Brick::BT_CUBE, "art/sq.png");
 	LoadBrickImage(Brick::BT_LGAMMA, "simple.png");
 	LoadBrickImage(Brick::BT_RGAMMA, "simple.png");
-	LoadBrickImage(Brick::BT_SNL, "simple.png");
-	LoadBrickImage(Brick::BT_SNR, "simple.png");
-	LoadBrickImage(Brick::BT_T, "simple.png");
+	LoadBrickImage(Brick::BT_SNL, "art/E.png");
+	LoadBrickImage(Brick::BT_SNR, "art/L.png");
+	LoadBrickImage(Brick::BT_T, "art/_i_.png");
 	FallingBrick.spawnBrick(GameField);
 }
 
@@ -60,8 +57,6 @@ int main(int argc, char **argv) {
 	loadResources();
 	TimerFall = SDL_AddTimer(500, FallCallback, NULL);
 
-//	TestEmpty = CreateSurf(48, 48);
-
 	SDL_Event ev;
 
 	while (!quitState && SDL_WaitEvent(&ev)) {
@@ -69,8 +64,6 @@ int main(int argc, char **argv) {
 
 		//Draw here
 		Background.draw(Screen);
-//		Test.draw(Screen);
-//		TestEmpty.draw(Screen);
 		GameField.draw(Screen);
 		FallingBrick.draw(Screen);
 

@@ -55,14 +55,14 @@ Brick::~Brick() {
 
 Brick::Type Brick::randType() {
 	int r = rand();
-	return Brick::BT_LINE;
+//	return Brick::BT_LINE;
 	return (Brick::Type) (r % BT_MAX);
 }
 
 Brick::Rot Brick::randRot() {
 	int r = rand();
 	//r = BR_UP;
-	return Brick::BR_UP;
+//	return Brick::BR_UP;
 	return (Brick::Rot) (r % BR_MAX);
 }
 
